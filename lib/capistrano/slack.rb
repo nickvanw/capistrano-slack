@@ -25,14 +25,15 @@ module Capistrano
             slack_emoji = fetch(:slack_emoji) || ":ghost:"
             slack_username = fetch(:slack_username) || "deploybot"
             slack_subdomain = fetch(:slack_subdomain)
+            slack_application = fetch(:slack_application) || application
             return if slack_token.nil?
             announced_deployer = fetch(:deployer)
             announced_stage = fetch(:stage, 'production')
 
             announcement = if fetch(:branch, nil)
-                             "#{announced_deployer} is deploying #{branch} to #{announced_stage}"
+                             "#{announced_deployer} is deploying #{slack_application}'s #{branch} to #{announced_stage}"
                            else
-                             "#{announced_deployer} is deploying to #{announced_stage}"
+                             "#{announced_deployer} is deploying #{slack_application} to #{announced_stage}"
                            end
             
 
@@ -60,6 +61,7 @@ module Capistrano
             slack_username = fetch(:slack_username) || "deploybot"
             slack_subdomain = fetch(:slack_subdomain)
             announced_stage = fetch(:stage, 'production')
+            slack_application = fetch(:slack_application) || application
             return if slack_token.nil?
             announced_deployer = fetch(:deployer)
             end_time = Time.now
@@ -71,7 +73,7 @@ module Capistrano
             end
 
           
-            msg = "#{announced_deployer} deployed successfully in #{elapsed} seconds to #{announced_stage}."
+            msg = "#{announced_deployer} deployed #{slack_application} successfully in #{elapsed} seconds to #{announced_stage}."
             
             # Parse the URI and handle the https connection
             uri = URI.parse("https://#{slack_subdomain}.slack.com/services/hooks/incoming-webhook?token=#{slack_token}")
@@ -93,10 +95,14 @@ module Capistrano
             slack_emoji = fetch(:slack_emoji) || ":ghost:"
             slack_username = fetch(:slack_username) || "deploybot"
             slack_subdomain = fetch(:slack_subdomain)
+            slack_application = fetch(:slack_application) || application
             return if slack_token.nil?
             announced_deployer = fetch(:deployer)
-          
-            msg = "#{announced_deployer} is reconfiguring monit on #{stage} with the #{branch} branch."
+            msg = if fetch(:branch, nil)
+                             "#{announced_deployer} is reconfiguring #{slack_application}'s monit on #{stage} with the #{branch} branch."
+                           else
+                             "#{announced_deployer} is reconfiguring #{slack_application}'s monit on #{stage}."
+                           end
             
             # Parse the URI and handle the https connection
             uri = URI.parse("https://#{slack_subdomain}.slack.com/services/hooks/incoming-webhook?token=#{slack_token}")

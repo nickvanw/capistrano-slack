@@ -59,6 +59,7 @@ module Capistrano
             slack_emoji = fetch(:slack_emoji) || ":ghost:"
             slack_username = fetch(:slack_username) || "deploybot"
             slack_subdomain = fetch(:slack_subdomain)
+            announced_stage = fetch(:stage, 'production')
             return if slack_token.nil?
             announced_deployer = fetch(:deployer)
             end_time = Time.now
@@ -68,6 +69,7 @@ module Capistrano
             rescue
               elapsed = "Unknown"
             end
+
           
             msg = "#{announced_deployer} deployed successfully in #{elapsed} seconds to #{announced_stage}."
             

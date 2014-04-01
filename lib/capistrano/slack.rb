@@ -22,10 +22,10 @@ module Capistrano
           task :starting do
             slack_token = fetch(:slack_token)
             slack_room = fetch(:slack_room)
-            slack_emoji = fetch(:slack_emoji) || ":ghost:"
-            slack_username = fetch(:slack_username) || "deploybot"
+            slack_emoji = fetch(:slack_emoji, ":ghost:")
+            slack_username = fetch(:slack_username, "deploybot")
             slack_subdomain = fetch(:slack_subdomain)
-            slack_application = fetch(:slack_application) || application
+            slack_application = fetch(:slack_application, application)
             return if slack_token.nil?
             announced_deployer = fetch(:deployer)
             announced_stage = fetch(:stage, 'production')
@@ -57,11 +57,11 @@ module Capistrano
           task :finished do
             slack_token = fetch(:slack_token)
             slack_room = fetch(:slack_room)
-            slack_emoji = fetch(:slack_emoji) || ":ghost:"
-            slack_username = fetch(:slack_username) || "deploybot"
+            slack_emoji = fetch(:slack_emoji, ":ghost:")
+            slack_username = fetch(:slack_username, "deploybot")
             slack_subdomain = fetch(:slack_subdomain)
             announced_stage = fetch(:stage, 'production')
-            slack_application = fetch(:slack_application) || application
+            slack_application = fetch(:slack_application, application)
             return if slack_token.nil?
             announced_deployer = fetch(:deployer)
             end_time = Time.now
@@ -92,10 +92,10 @@ module Capistrano
           task :monit do
             slack_token = fetch(:slack_token)
             slack_room = fetch(:slack_room)
-            slack_emoji = fetch(:slack_emoji) || ":ghost:"
-            slack_username = fetch(:slack_username) || "deploybot"
+            slack_emoji = fetch(:slack_emoji, ":ghost:")
+            slack_username = fetch(:slack_username, "deploybot")
             slack_subdomain = fetch(:slack_subdomain)
-            slack_application = fetch(:slack_application) || application
+            slack_application = fetch(:slack_application, application)
             return if slack_token.nil?
             announced_deployer = fetch(:deployer)
             msg = if fetch(:branch, nil)

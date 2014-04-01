@@ -62,8 +62,12 @@ module Capistrano
             return if slack_token.nil?
             announced_deployer = fetch(:deployer)
             end_time = Time.now
-            start_time = fetch(:start_time)
-            elapsed = end_time.to_i - start_time.to_i
+            begin
+              start_time = fetch(:start_time)
+              elapsed = end_time.to_i - start_time.to_i
+            rescue
+              elapsed = "Unknown"
+            end
           
             msg = "#{announced_deployer} deployed successfully in #{elapsed} seconds to #{announced_stage}."
             

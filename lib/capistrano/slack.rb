@@ -11,6 +11,7 @@ module Capistrano
         before 'deploy', 'slack:starting'
         before 'deploy:migrations', 'slack:starting'
         after 'deploy',  'slack:finished'
+        after 'deploy:migrations',  'slack:finished'
         before "monit:config", 'slack:monit'
 
         set :deployer do
@@ -35,7 +36,7 @@ module Capistrano
                            else
                              "#{announced_deployer} is deploying #{slack_application} to #{announced_stage}"
                            end
-            
+
 
             # Parse the API url and create an SSL connection
             uri = URI.parse("https://#{slack_subdomain}.slack.com/services/hooks/incoming-webhook?token=#{slack_token}")
@@ -72,9 +73,9 @@ module Capistrano
               elapsed = "Unknown"
             end
 
-          
+
             msg = "#{announced_deployer} deployed #{slack_application} successfully in #{elapsed} seconds to #{announced_stage}."
-            
+
             # Parse the URI and handle the https connection
             uri = URI.parse("https://#{slack_subdomain}.slack.com/services/hooks/incoming-webhook?token=#{slack_token}")
             http = Net::HTTP.new(uri.host, uri.port)
@@ -84,7 +85,7 @@ module Capistrano
             # Create the post request and setup the form data
             request = Net::HTTP::Post.new(uri.request_uri)
             request.set_form_data(:payload => {'channel' => slack_room, 'username' => slack_username, 'text' => msg, "icon_emoji" => slack_emoji}.to_json)
-            
+
             # Make the actual request to the API
             response = http.request(request)
           end
@@ -103,7 +104,7 @@ module Capistrano
                            else
                              "#{announced_deployer} is reconfiguring #{slack_application}'s monit on #{stage}."
                            end
-            
+
             # Parse the URI and handle the https connection
             uri = URI.parse("https://#{slack_subdomain}.slack.com/services/hooks/incoming-webhook?token=#{slack_token}")
             http = Net::HTTP.new(uri.host, uri.port)
@@ -113,7 +114,7 @@ module Capistrano
             # Create the post request and setup the form data
             request = Net::HTTP::Post.new(uri.request_uri)
             request.set_form_data(:payload => {'channel' => slack_room, 'username' => slack_username, 'text' => msg, "icon_emoji" => slack_emoji}.to_json)
-            
+
             # Make the actual request to the API
             response = http.request(request)
           end
@@ -126,4 +127,4 @@ end
 if Capistrano::Configuration.instance
   Capistrano::Configuration.instance.extend(Capistrano::Slack)
 end
-  
+

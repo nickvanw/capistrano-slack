@@ -1,4 +1,4 @@
-source :gemcutter
+source 'https://rubygems.org'
 
 gem "capistrano", "< 3.0.0"
 gem "capistrano-log_with_awesome", "~> 0.0.2"
